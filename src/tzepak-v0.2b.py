@@ -23,7 +23,7 @@ def randomize_case(text, seed):
     return "".join(result)
 
 
-print("TZEPak Algorithm v0.2-beta")
+print("Tzepak Algorithm v0.2-beta")
 
 service = unicodedata.normalize(
     "NFKC", input("Please enter the service name:\n> ").strip()
