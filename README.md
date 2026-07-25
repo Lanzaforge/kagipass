@@ -1,4 +1,4 @@
-# TZEPak Password Algorithm
+# TZEPak Password Generator
 
 > This is an experimental project. It is not intended for production use without proper security review, testing, and validation.
 
@@ -6,29 +6,39 @@
 
 ## Overview
 
-TZEPak is a deterministic password generation algorithm that creates unique, reproducible passwords using two primary inputs:
+TZEPak is a deterministic password generator that creates unique, reproducible passwords using two primary inputs:
 
 - A service identifier (such as a website or application name)
 - A user-provided master secret
 
-Given the same inputs and algorithm version, TZEPak will always generate the same password. This allows passwords to be regenerated without storing each password individually.
+Given the same inputs and generator version, TZEPak will always generate the same password. This allows passwords to be regenerated without storing each password individually.
 
 # _Make your own TZEPak variant!_
 
-**We strongly recommend reviewing, modifying, and testing the algorithm before using it for any real-world passwords. Any changes to the algorithm should be assigned an unique identifier to prevent compatibility issues with previously generated passwords.**
+**We strongly recommend reviewing and modifying the generator to your own liking before using it for any real-world passwords. Any changes to the generator should be assigned an unique identifier to prevent compatibility issues with previously generated passwords.**
 
 ## How It Works
 
-TZEPak uses a multi-stage generation process:
+TZEPak generates passwords using a deterministic process:
 
-1. The service identifier and master secret are processed through a key derivation function.
-2. The derived output is used to generate a deterministic seed.
-3. The seed controls additional transformations, including:
-    - component shuffling
+1. The service identifier is normalized and incorporated into a unique salt.
+2. The master secret and salt are processed using PBKDF2-HMAC-SHA256 to derive a 256-bit key.
+3. The derived key is used to produce deterministic formatting information, including:
+    - component ordering
     - character case randomization
-    - output formatting
+    - fixed password fragments
 
-4. The final result is generated as a versioned TZEPak password.
+4. A version identifier is prepended to the generated password.
+
+Service identifiers and master secrets are processed as UTF-8, allowing TZEPak to support arbitrary Unicode input.
+
+## Reproducing Passwords
+
+The output will remain identical as long as:
+
+- the master secret remains unchanged
+- the service identifier remains unchanged
+- the TZEPak version remains unchanged
 
 ## Example
 
@@ -45,14 +55,8 @@ Master Secret:
 Output:
 
 ```
-TZU0.1Bxxxxxxxxxxxxxxxx
+TZUxxxxxxxxxxxxxxxxxxxx...
 ```
-
-The output will remain identical as long as:
-
-- the master secret remains unchanged
-- the service identifier remains unchanged
-- the TZEPak version remains unchanged
 
 ## Security Notice
 
