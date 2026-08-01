@@ -42,26 +42,21 @@ hashed = hashlib.pbkdf2_hmac(
     dklen=32,
 )
 
-fragment = hashed.hex()[:15]
+fragment = hashed.hex()[:25]
 
 seed = int.from_bytes(hashlib.sha256(hashed).digest(), "big")
 
 a1 = "!~"
 a2 = "~!"
-a3 = "cysfigr"
-a4 = "tzepak"
 a5 = fragment
 a6 = "@@@!"
 a7 = "!!@@"
 
-a3 = shuffle(a3, seed)
-a4 = shuffle(a4, seed)
-
-parts = [a1, a2, a3, a4, a5, a6, a7]
+parts = [a1, a2, a5, a6, a7]
 
 rn = random.Random(seed)
 rn.shuffle(parts)
 
-password = "TZU0.2B" + randomize_case("".join(parts), seed)
+password = "TZU0.3B" + randomize_case("".join(parts), seed)
 
 print(password)
