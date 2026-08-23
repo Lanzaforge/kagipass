@@ -4,6 +4,20 @@
 
 > kagi (鍵、かぎ) means "key" in japanese.
 
+## Installation
+
+### Using pipx
+
+```sh
+pipx install kagipass
+```
+
+### Using uv
+
+```sh
+uv tool install kagipass
+```
+
 ## Overview
 
 kagipass is a deterministic password generator using Argon2id that creates unique, reproducible passwords using two primary inputs:
@@ -24,3 +38,7 @@ The security of generated passwords depends heavily on:
 - the security of the underlying cryptographic primitives
 
 Do not use kagipass for important accounts unless you fully understand the risks and have independently verified the implementation.
+
+```
+
+```
