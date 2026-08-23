@@ -6,9 +6,10 @@ def main() -> None:
 
     from typing import Literal
     from argon2.low_level import Type, hash_secret_raw
+    from importlib.metadata import version
 
-    VERSION = "v26.0.0-beta"
-    TAG = "KgU00b"
+    VERSION = version("kagipass")
+    TAG = "KgU01b"
 
     Preset = Literal[
         "alphanumeric",
@@ -42,12 +43,16 @@ def main() -> None:
 
         raise RuntimeError("Argon2id did not produce enough usable output bytes.")
 
-    print(f"= kagipass {VERSION} =")
-
     # ========== argument parsing thingy ========== #
 
     parser = argparse.ArgumentParser(
         description="Generate deterministic passwords using the kagipass algorithm."
+    )
+
+    parser.add_argument(
+        "--version",
+        action="version",
+        version=f"kagipass {VERSION}",
     )
 
     parser.add_argument(
