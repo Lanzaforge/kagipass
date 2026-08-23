@@ -1,0 +1,19 @@
+[project]
+name = "kagipass"
+version = "26.0.0b0"
+description = "Generate deterministic, strong passwords using the kagipass algorithm"
+readme = "README.md"
+authors = [
+    { name = "Lanzaforge", email = "lanzaforge@proton.me" }
+]
+requires-python = ">=3.14"
+dependencies = [
+    "argon2-cffi>=25.1.0",
+]
+
+[project.scripts]
+kagipass = "kagipass.cli:main"
+
+[build-system]
+requires = ["uv_build>=0.12.5,<0.13.0"]
+build-backend = "uv_build"

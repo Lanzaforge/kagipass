@@ -1,6 +1,6 @@
 import hashlib, random, unicodedata
 
-ITERATIONS = 1_000_000  # change this if the program doesn't perform well on your device
+ITERATIONS = 1_100_000  # change this if the program doesn't perform well on your device
 # DO NOTE THAT CHANGES TO THIS CONSTANT *WILL* SHUFFLE ALL OF THE PASSWORDS
 
 
@@ -23,7 +23,7 @@ def randomize_case(text, seed):
     return "".join(result)
 
 
-print("Tzepak Algorithm v0.2-beta")
+print("Tzepak Algorithm v0.4-beta")
 
 service = unicodedata.normalize(
     "NFKC", input("Please enter the service name:\n> ").strip()
@@ -42,7 +42,7 @@ hashed = hashlib.pbkdf2_hmac(
     dklen=32,
 )
 
-fragment = hashed.hex()[:25]
+fragment = hashed.hex()[:50]
 
 seed = int.from_bytes(hashlib.sha256(hashed).digest(), "big")
 
@@ -57,6 +57,6 @@ parts = [a1, a2, a5, a6, a7]
 rn = random.Random(seed)
 rn.shuffle(parts)
 
-password = "TZU0.3B" + randomize_case("".join(parts), seed)
+password = "TZU0.4B" + randomize_case("".join(parts), seed)
 
 print(password)
