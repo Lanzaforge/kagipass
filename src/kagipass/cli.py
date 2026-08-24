@@ -13,7 +13,7 @@ def main() -> None:
     from platformdirs import user_config_dir
 
     VERSION = version("kagipass")
-    TAG = "KgU02b"
+    TAG = "KgU10b"
 
     Preset = Literal[
         "alphanumeric",
