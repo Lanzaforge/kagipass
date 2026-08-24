@@ -192,14 +192,14 @@ def main() -> None:
             "WARNING! length is very large, under 200 is recommended for most services."
         )
 
-    if args.time_cost < 1:
-        parser.error("time cost must be at least 1")
+    if args.time_cost < 2:
+        parser.error("time cost must be at least 2")
 
-    if args.memory_cost < 8:
-        parser.error("memory cost must be at least 8 KiB")
+    if args.memory_cost < 131072:
+        parser.error("memory cost must be at least 131072 KiB (128 MiB)")
 
-    if args.parallelism < 1:
-        parser.error("parallelism must be at least 1")
+    if args.parallelism < 2:
+        parser.error("parallelism must be at least 2")
 
     service = args.service
 
@@ -225,9 +225,7 @@ def main() -> None:
     password_length = math.ceil(payload_length / acceptance_rate) + FAILSAFE
 
     service_seed = (
-        b"kagipass:"
-        + VERSION.encode("ascii")
-        + b":"
+        b"<kagipass>:"
         + hashlib.sha256(service.encode("utf-8")).digest()
         + args.length.to_bytes(4, "big")
         + pepper
