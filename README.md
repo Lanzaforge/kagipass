@@ -1,44 +1,60 @@
 # kagipass
 
-> This is still an experimental project. It is not intended for production use without proper security review, testing, and validation.
+> **This project is still experimental.** Not intended for production use without proper security review and testing.
 
-> kagi (鍵、かぎ) means "key" in japanese.
+**kagipass** (鍵 / _kagi_ = "key" in Japanese) is a deterministic password generator based on Argon2id.
+
+It creates strong, reproducible passwords from:
+
+- a **service name** (e.g. `github`, `discord`)
+- a **master password**
+- an optional **pepper**
+
+Given the same inputs and version, kagipass always produces the same password. This lets you regenerate passwords without storing them.
 
 ## Installation
 
-### Using pipx
+### pipx
 
 ```sh
 pipx install kagipass
 ```
 
-### Using uv
+### uv
 
 ```sh
 uv tool install kagipass
 ```
 
-## Overview
+# Quick Start
 
-kagipass is a deterministic password generator using Argon2id that creates unique, reproducible passwords using two primary inputs:
+```sh
+# Generate a password for a service
+kagipass -S github
 
-- A service identifier (such as a website or application name)
-- A user-provided master secret
-
-Given the same inputs and generator version, kagipass will always generate the same password. This allows passwords to be regenerated without storing each password individually.
-
-## Security Notice
-
-kagipass is an experimental project and has not been independently audited.
-
-The security of generated passwords depends heavily on:
-
-- the strength and secrecy of the master secret
-- the correctness of the implementation
-- the security of the underlying cryptographic primitives
-
-Do not use kagipass for important accounts unless you fully understand the risks and have independently verified the implementation.
-
+# Force generation of a new pepper
+kagipass --generate-pepper
 ```
 
-```
+On first run, kagipass will generate a high-entropy pepper.
+
+You must save this pepper, losing it means you can no longer recreate your passwords.
+
+# How it works
+
+1. You provide a master password and a service name.
+2. kagipass derives a salt from the service name, version, length, and optional pepper.
+3. Argon2id is used to derive a high-entropy key. You can customize the Argon2id encryption parameters with arguments.
+4. The key is encoded into a password using the selected character preset.
+
+# Security Notice
+
+kagipass is experimental and has not been independently audited.
+The security of generated passwords depends on:
+
+- the strength of your master password
+- keeping the pepper secret
+- the correctness of this implementation
+- the underlying cryptographic libraries
+
+Do not use kagipass for important accounts unless you fully understand the risks and have reviewed the code yourself.
