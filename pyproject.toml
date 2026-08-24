@@ -1,6 +1,6 @@
 [project]
 name = "kagipass"
-version = "26.0.1b0"
+version = "26.0.2b0"
 description = "Generate deterministic, strong passwords using the kagipass algorithm"
 readme = "README.md"
 authors = [
@@ -9,6 +9,7 @@ authors = [
 requires-python = ">=3.14"
 dependencies = [
     "argon2-cffi>=25.1.0",
+    "platformdirs>=4.11.3",
 ]
 
 [project.scripts]
