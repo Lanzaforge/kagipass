@@ -5,6 +5,7 @@ def main() -> None:
     import math
     import json
     import secrets
+    import string
 
     from typing import Literal
     from argon2.low_level import Type, hash_secret_raw
@@ -13,7 +14,7 @@ def main() -> None:
     from platformdirs import user_config_dir
 
     VERSION = version("kagipass")
-    TAG = "KgU11b"
+    TAG = "KgU12b"
 
     Preset = Literal[
         "alphanumeric",
@@ -57,9 +58,6 @@ def main() -> None:
         print(
             "\033[31mIF YOU LOSE ACCESS TO THIS PEPPER, YOU WON'T BE ABLE TO REGENERATE YOUR PASSWORDS!\033[0m",
         )
-        print(
-            "If you had used kagipass before version 26.0.2b0, you can regenerate passwords by leaving the pepper blank."
-        )
         print("=============================")
 
         state = load_state()
@@ -69,7 +67,34 @@ def main() -> None:
         return pepper.encode()
 
     def ask_pepper() -> bytes:
-        return getpass.getpass("Pepper: ").encode("utf-8")
+        while True:
+            pepper = (
+                getpass.getpass(
+                    "Please enter the 64-character hexadecimal pepper. "
+                    "(case-insensitive, surrounding whitespace is ignored)\n> "
+                )
+                .strip()
+                .lower()
+            )
+
+            if pepper == "":
+                return b""
+
+            if len(pepper) != 64:
+                print(
+                    "\033[31mPepper must be exactly 64 hexadecimal characters.\033[0m "
+                    "Please try again."
+                )
+                continue
+
+            if not all(c in string.hexdigits for c in pepper):
+                print(
+                    "\033[31mPepper must contain only hexadecimal characters.\033[0m "
+                    "Please try again."
+                )
+                continue
+
+            return bytes.fromhex(pepper)
 
     def get_pepper(force: bool = False) -> bytes:
         state = load_state()
@@ -80,8 +105,6 @@ def main() -> None:
         return ask_pepper()
 
     def encode_password(data: bytes, alphabet: str, length: int) -> str:
-        """Encode deterministic bytes into a password using rejection sampling."""
-
         limit = 256 - (256 % len(alphabet))
 
         result = []
@@ -113,7 +136,7 @@ def main() -> None:
     parser.add_argument(
         "-S",
         "--service",
-        help="Service name to generate the password for.",
+        help="Service name to generate the password for. Case-insensitive.",
     )
 
     parser.add_argument(
@@ -201,13 +224,19 @@ def main() -> None:
     if args.parallelism < 2:
         parser.error("parallelism must be at least 2")
 
-    service = args.service
-
     if args.generate_pepper:
         generate_pepper()
         return
 
-    master = getpass.getpass("Enter master password: ").encode("utf-8")
+    service: str = args.service.strip().lower()
+
+    master = (
+        getpass.getpass(
+            "Please enter your master password. (case-sensitive, surrounding whitespace is ignored)\n> "
+        )
+        .strip()
+        .encode("utf-8")
+    )
 
     state = load_state()
     if not state.get("pepper_generated"):

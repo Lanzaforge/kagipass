@@ -117,7 +117,7 @@ wheels = [
 
 [[package]]
 name = "kagipass"
-version = "26.0.2b0"
+version = "26.1.2b0"
 source = { editable = "." }
 dependencies = [
     { name = "argon2-cffi" },

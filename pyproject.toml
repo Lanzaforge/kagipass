@@ -1,6 +1,6 @@
 [project]
 name = "kagipass"
-version = "26.1.1b0"
+version = "26.1.2b0"
 description = "Generate deterministic, strong passwords using the kagipass algorithm"
 readme = "README.md"
 authors = [

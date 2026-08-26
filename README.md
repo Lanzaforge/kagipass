@@ -42,7 +42,7 @@ You must save this pepper, losing it means you can no longer recreate your passw
 
 # How it works
 
-1. You provide a master password and a service name.
+1. You provide a service name, the master password, and your unique high-entropy pepper.
 2. kagipass derives a salt from the service name, version, length, and optional pepper.
 3. Argon2id is used to derive a high-entropy key. You can customize the Argon2id encryption parameters with arguments.
 4. The key is encoded into a password using the selected character preset.
