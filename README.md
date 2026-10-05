@@ -6,7 +6,7 @@
 
 It creates strong, reproducible passwords from:
 
-- a **service name** (e.g. `github`, `discord`)
+- a case-insensitive **service name** (e.g. `github`, `discord`)
 - a **master password**
 - an optional **pepper**
 
@@ -53,7 +53,7 @@ kagipass is experimental and has not been independently audited.
 The security of generated passwords depends on:
 
 - the strength of your master password
-- keeping the pepper secret
+- keeping your master password and the pepper secret
 - the correctness of this implementation
 - the underlying cryptographic libraries
 

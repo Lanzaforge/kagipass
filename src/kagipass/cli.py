@@ -45,6 +45,7 @@ def main() -> None:
 
     RED = "\033[31m"
     GREEN = "\033[32m"
+    YELLOW = "\033[33m"
     RESET = "\033[0m"
     DIM = "\033[2m"
 
@@ -215,19 +216,25 @@ def main() -> None:
     if args.length <= (len(TAG) if not args.no_version_tag else 0):
         parser.error("length is too small, at least 15 is recommended")
 
-    if args.length > 200:
+    if len(args) > 72:
         print(
-            "WARNING! length is very large, under 200 is recommended for most services."
+            f"{YELLOW}[warn] password length exceeds 72 characters. "
+            f"some password-hashing systems, such as bcrypt, only process the "
+            f"first 72 bytes of a password.{RESET}\n"
+            "tip: if you use a password manager, consider storing the intended password length alongside the password.\n"
+            'for example, you would store "Discord [72]", since Discord limits your password\'s length to 72 characters.'
         )
 
     if args.time_cost < 2:
-        parser.error("time cost must be at least 2")
+        parser.error("[security error] time cost must be at least 2")
 
     if args.memory_cost < 131072:
-        parser.error("memory cost must be at least 131072 KiB (128 MiB)")
+        parser.error(
+            "[security error] memory cost must be at least 131072 KiB (128 MiB)"
+        )
 
     if args.parallelism < 2:
-        parser.error("parallelism must be at least 2")
+        parser.error("[security error] parallelism must be at least 2")
 
     if args.generate_pepper:
         generate_pepper()
@@ -243,6 +250,11 @@ def main() -> None:
         .strip()
         .encode("utf-8")
     )
+
+    if all(c in string.hexdigits for c in master) and len(master) == 64:
+        print(
+            f"{YELLOW}[warn] master password looks like a pepper hex. make sure that you pasted the correct information.{RESET}\nyou can ignore this message if this is intentional."
+        )
 
     state = load_state()
     if not state.get("pepper_generated"):
